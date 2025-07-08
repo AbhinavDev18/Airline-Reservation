@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Flight - SkyWay Airlines</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>SkyWay</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" id="dashboard-link">My Trips</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html" id="login-link" style="display: none;">Login</a></li>
+                <li><a href="#" id="logout-link">Logout</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="booking-container">
+        <h2>Book Your Flight</h2>
+        
+        <div class="booking-progress">
+            <div class="progress-step active">Flight Details</div>
+            <div class="progress-step">Passenger Information</div>
+            <div class="progress-step">Payment</div>
+            <div class="progress-step">Confirmation</div>
+        </div>
+        
+        <div class="booking-step">
+            <h3>Flight Summary</h3>
+            <div id="flight-summary" class="flight-summary">
+            </div>
+        </div>
+        
+        <div class="booking-step">
+            <h3>Passenger Information</h3>
+            <form id="passenger-form" class="passenger-form">
+            </form>
+        </div>
+        
+        <button id="btn-booking" class="btn-booking">Continue to Payment</button>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SkyWay Airlines</h3>
+                <p>Making travel dreams come true since 2023</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@skyway.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 SkyWay Airlines. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

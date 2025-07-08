@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - SkyWay Airlines</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>SkyWay</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" id="dashboard-link">My Trips</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html" id="login-link" style="display: none;">Login</a></li>
+                <li><a href="#" id="logout-link">Logout</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="payment-container">
+        <h2>Payment</h2>
+        
+        <div class="booking-progress">
+            <div class="progress-step completed">Flight Details</div>
+            <div class="progress-step completed">Passenger Information</div>
+            <div class="progress-step active">Payment</div>
+            <div class="progress-step">Confirmation</div>
+        </div>
+        
+        <div id="payment-summary" class="payment-summary">
+            <!-- Payment summary will be displayed here -->
+        </div>
+        
+        <div class="payment-details">
+            <h3>Payment Method</h3>
+            <div class="payment-options">
+                <div class="payment-option selected" data-method="card">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    <span>Credit/Debit Card</span>
+                </div>
+                <div class="payment-option" data-method="paypal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="#003087">
+                        <path d="M19.5 7.5h-15a1.5 1.5 0 0 0-1.5 1.5v6a1.5 1.5 0 0 0 1.5 1.5h15a1.5 1.5 0 0 0 1.5-1.5V9a1.5 1.5 0 0 0-1.5-1.5zM7.5 13.5h-3V12h3v1.5zm3 0h-2V12h2v1.5z"/>
+                    </svg>
+                    <span>PayPal</span>
+                </div>
+                <div class="payment-option" data-method="googlepay">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="#4285F4">
+                        <path d="M6.736 13.5H4.5c-0.414 0-0.75-0.336-0.75-0.75v-1.5c0-0.414 0.336-0.75 0.75-0.75h2.236c0.758 0 1.376 0.618 1.376 1.376v0.248c0 0.758-0.618 1.376-1.376 1.376zM16.5 14.25c-1.241 0-2.25-1.009-2.25-2.25s1.009-2.25 2.25-2.25 2.25 1.009 2.25 2.25-1.009 2.25-2.25 2.25zM7.5 14.25c-1.241 0-2.25-1.009-2.25-2.25s1.009-2.25 2.25-2.25 2.25 1.009 2.25 2.25-1.009 2.25-2.25 2.25z"/>
+                    </svg>
+                    <span>Google Pay</span>
+                </div>
+            </div>
+            
+            <div id="card-details" class="card-details">
+                <h3>Card Details</h3>
+                <form id="card-form" class="card-form">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-name">Cardholder Name</label>
+                        <input type="text" id="card-name" name="card-name" placeholder="John Doe" required>
+                    </div>
+                    <div class="card-row">
+                        <div class="form-group">
+                            <label for="expiry-date">Expiry Date</label>
+                            <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY (Any value)">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="cvv" placeholder="123">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div id="payment-loader" class="loader" style="display: none;"></div>
+        
+        <button id="btn-payment" class="btn-payment">Pay Now</button>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SkyWay Airlines</h3>
+                <p>Making travel dreams come true since 2023</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@skyway.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 SkyWay Airlines. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

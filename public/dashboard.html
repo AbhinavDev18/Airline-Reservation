@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips - SkyWay Airlines</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>SkyWay</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" id="dashboard-link" class="active">My Trips</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html" id="login-link" style="display: none;">Login</a></li>
+                <li><a href="#" id="logout-link">Logout</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">My Trips</h2>
+            <div class="user-welcome">
+                <p>Welcome, <span id="user-name">User</span></p>
+            </div>
+        </div>
+        
+        <div class="bookings-container">
+            <div id="bookings-loader" class="loader"></div>
+            <div id="no-bookings" style="display: none;">
+                <p>You don't have any bookings yet.</p>
+                <a href="index.html" class="btn-primary">Book a Flight</a>
+            </div>
+            <div id="bookings-list">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SkyWay Airlines</h3>
+                <p>Making travel dreams come true since 2023</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@skyway.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 SkyWay Airlines. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            requireAuth()
+                .then(user => {
+                    loadUserBookings(user);
+                    
+                    const userNameElement = document.getElementById('user-name');
+                    if (userNameElement) {
+                        userNameElement.textContent = user.displayName || user.email.split('@')[0];
+                    }
+                })
+                .catch(error => {
+                    console.error('Auth error:', error);
+                });
+        });
+        
+        function loadUserBookings(user) {
+            const bookingsList = document.getElementById('bookings-list');
+            const noBookings = document.getElementById('no-bookings');
+            const bookingsLoader = document.getElementById('bookings-loader');
+            
+            let recentBooking = null;
+            try {
+                recentBooking = JSON.parse(localStorage.getItem('recentBooking'));
+            } catch (e) {
+                console.warn('Could not parse recent booking from localStorage:', e);
+            }
+            
+            if (recentBooking && bookingsLoader) {
+                bookingsLoader.style.display = 'none';
+            }
+            
+            if (recentBooking && bookingsList) {
+                const bookingId = recentBooking.bookingId;
+                const booking = recentBooking.booking;
+                
+                const departureDate = booking.flightDetails.departure.date;
+                const formattedDate = departureDate ? formatDate(departureDate) : 'N/A';
+                
+                const bookingsHTML = `
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <h3 class="booking-title">${booking.flightDetails.airline} ${booking.flightDetails.flightNumber}</h3>
+                            <span class="booking-status status-${booking.status.toLowerCase()}">${capitalizeFirstLetter(booking.status)}</span>
+                        </div>
+                        <div class="booking-details">
+                            <div class="booking-detail">
+                                <span class="detail-label">From</span>
+                                <span class="detail-value">${booking.flightDetails.departure.city} (${booking.flightDetails.departure.airport})</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">To</span>
+                                <span class="detail-value">${booking.flightDetails.arrival.city} (${booking.flightDetails.arrival.airport})</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">Date</span>
+                                <span class="detail-value">${formattedDate}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">Departure</span>
+                                <span class="detail-value">${booking.flightDetails.departure.time}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">Arrival</span>
+                                <span class="detail-value">${booking.flightDetails.arrival.time}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">Class</span>
+                                <span class="detail-value">${capitalizeFirstLetter(booking.flightDetails.class)}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">Passengers</span>
+                                <span class="detail-value">${booking.passengers.length}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">Total Price</span>
+                                <span class="detail-value">$${booking.payment.amount}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <span class="detail-label">Booking ID</span>
+                                <span class="detail-value">${bookingId}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                bookingsList.innerHTML = bookingsHTML;
+                return;
+            }
+            
+            try {
+                db.collection('bookings')
+                    .where('userId', '==', user.uid)
+                    .orderBy('createdAt', 'desc')
+                    .get()
+                    .then(querySnapshot => {
+                        if (bookingsLoader) bookingsLoader.style.display = 'none';
+                        
+                        if (querySnapshot.empty) {
+                            if (noBookings) noBookings.style.display = 'block';
+                            return;
+                        }
+                        
+                        let bookingsHTML = '';
+                        
+                        querySnapshot.forEach(doc => {
+                            const booking = doc.data();
+                            const bookingId = doc.id;
+                            
+                            const departureDate = booking.flightDetails.departure.date;
+                            const formattedDate = departureDate ? formatDate(departureDate) : 'N/A';
+                            
+                            bookingsHTML += `
+                                <div class="booking-card">
+                                    <div class="booking-header">
+                                        <h3 class="booking-title">${booking.flightDetails.airline} ${booking.flightDetails.flightNumber}</h3>
+                                        <span class="booking-status status-${booking.status.toLowerCase()}">${capitalizeFirstLetter(booking.status)}</span>
+                                    </div>
+                                    <div class="booking-details">
+                                        <div class="booking-detail">
+                                            <span class="detail-label">From</span>
+                                            <span class="detail-value">${booking.flightDetails.departure.city} (${booking.flightDetails.departure.airport})</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">To</span>
+                                            <span class="detail-value">${booking.flightDetails.arrival.city} (${booking.flightDetails.arrival.airport})</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">Date</span>
+                                            <span class="detail-value">${formattedDate}</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">Departure</span>
+                                            <span class="detail-value">${booking.flightDetails.departure.time}</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">Arrival</span>
+                                            <span class="detail-value">${booking.flightDetails.arrival.time}</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">Class</span>
+                                            <span class="detail-value">${capitalizeFirstLetter(booking.flightDetails.class)}</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">Passengers</span>
+                                            <span class="detail-value">${booking.passengers.length}</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">Total Price</span>
+                                            <span class="detail-value">$${booking.payment.amount}</span>
+                                        </div>
+                                        <div class="booking-detail">
+                                            <span class="detail-label">Booking ID</span>
+                                            <span class="detail-value">${bookingId}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        if (bookingsList) bookingsList.innerHTML = bookingsHTML;
+                    })
+                    .catch(error => {
+                        console.error('Error loading bookings from Firestore:', error);
+                        
+                        if (bookingsLoader) bookingsLoader.style.display = 'none';
+                        
+                        if (!recentBooking) {
+                            if (noBookings) {
+                                noBookings.style.display = 'block';
+                            } else if (bookingsList) {
+                                bookingsList.innerHTML = `
+                                    <div class="alert alert-info">
+                                        <p>Your bookings will appear here after you make a reservation.</p>
+                                        <a href="index.html" class="btn-primary" style="display: inline-block; margin-top: 15px;">Book a Flight</a>
+                                    </div>
+                                `;
+                            }
+                        }
+                    });
+            } catch (error) {
+                console.error('Error in loadUserBookings:', error);
+                
+                if (bookingsLoader) bookingsLoader.style.display = 'none';
+                
+                if (!recentBooking && noBookings) {
+                    noBookings.style.display = 'block';
+                }
+            }
+        }
+        
+        function formatDate(dateString) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+        
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
+</body>
+</html>

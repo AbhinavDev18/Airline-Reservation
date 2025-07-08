@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyWay Airlines - Book Your Flight</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>SkyWay</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="dashboard.html" id="dashboard-link" style="display: none;">My Trips</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html" id="login-link">Login</a></li>
+                <li><a href="#" id="logout-link" style="display: none;">Logout</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Explore the World with SkyWay</h1>
+            <p>Find the best flights at the best prices</p>
+        </div>
+    </section>
+
+    <section class="search-container">
+        <div class="search-form">
+            <h2>Search Flights</h2>
+            <form id="flight-search-form">
+                <div class="form-group">
+                    <label for="from">From</label>
+                    <input type="text" id="from" placeholder="City or Airport" required>
+                </div>
+                <div class="form-group">
+                    <label for="to">To</label>
+                    <input type="text" id="to" placeholder="City or Airport" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="departure-date">Departure Date</label>
+                        <input type="date" id="departure-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="return-date">Return Date</label>
+                        <input type="date" id="return-date">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="passengers">Passengers</label>
+                        <select id="passengers" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="class">Class</label>
+                        <select id="class" required>
+                            <option value="economy">Economy</option>
+                            <option value="business">Business</option>
+                            <option value="first">First Class</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-search">Search Flights</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="search-results">
+        <div class="results-container">
+            <h2>Flight Results</h2>
+            <div id="search-loader" class="loader" style="display: none;"></div>
+            <div id="flight-results"></div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <i class="fas fa-globe"></i>
+            <h3>Global Destinations</h3>
+            <p>Fly to over 1000 destinations worldwide</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-dollar-sign"></i>
+            <h3>Best Prices</h3>
+            <p>Guaranteed best fares on all flights</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-headset"></i>
+            <h3>24/7 Support</h3>
+            <p>Customer service available anytime</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SkyWay Airlines</h3>
+                <p>Making travel dreams come true since 2023</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@skyway.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 SkyWay Airlines. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/flight-search.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

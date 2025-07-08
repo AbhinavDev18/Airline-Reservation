@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SkyWay Airlines</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>SkyWay</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" id="dashboard-link" style="display: none;">My Trips</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html" id="login-link" class="active">Login</a></li>
+                <li><a href="#" id="logout-link" style="display: none;">Logout</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <h2>Login</h2>
+        <div id="auth-error" class="alert alert-error" style="display: none;"></div>
+        
+        <form id="login-form" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-auth">Login</button>
+        </form>
+        
+        <div class="auth-divider">
+            <span>OR</span>
+        </div>
+        
+        <div class="auth-providers">
+            <button id="google-login" class="btn-google">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#4285F4">
+                    <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"/>
+                </svg>
+                Sign in with Google
+            </button>
+        </div>
+        
+        <div class="auth-switch">
+            <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SkyWay Airlines</h3>
+                <p>Making travel dreams come true since 2023</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@skyway.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 SkyWay Airlines. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle login form submission
+            const loginForm = document.getElementById('login-form');
+            const authError = document.getElementById('auth-error');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // Hide any previous error
+                    if (authError) authError.style.display = 'none';
+                    
+                    // Sign in with email and password
+                    signIn(email, password)
+                        .then(() => {
+                            // Redirect to home or previous page
+                            const redirectTo = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
+                            window.location.href = redirectTo;
+                        })
+                        .catch(error => {
+                            console.error('Login error:', error);
+                            
+                            // Show error message
+                            if (authError) {
+                                authError.textContent = error.message;
+                                authError.style.display = 'block';
+                            }
+                        });
+                });
+            }
+            
+            // Handle Google login
+            const googleLoginBtn = document.getElementById('google-login');
+            
+            if (googleLoginBtn) {
+                googleLoginBtn.addEventListener('click', function() {
+                    // Sign in with Google
+                    signInWithGoogle()
+                        .then(() => {
+                            // Redirect to home or previous page
+                            const redirectTo = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
+                            window.location.href = redirectTo;
+                        })
+                        .catch(error => {
+                            console.error('Google login error:', error);
+                            
+                            // Show error message
+                            if (authError) {
+                                authError.textContent = error.message;
+                                authError.style.display = 'block';
+                            }
+                        });
+                });
+            }
+            
+            // Check if user is already logged in
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    // User is already logged in, redirect to home
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
