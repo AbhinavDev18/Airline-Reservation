@@ -23,18 +23,20 @@ A web-based airline reservation system built as a **Software Engineering project
 ---
 
 ## 📂 Project Structure
-
+```
 airlineReservation/
 ├── public/ # Frontend files (HTML, CSS, JS)
 ├── firebase.json # Firebase hosting config
 ├── server.py # Python backend server
 ├── firestore.rules # Firestore security rules
 └── .firebaserc # Firebase project settings
+```
 
 
 ## ⚠️ Environment Variables
 Before running the server, set your Firebase configuration in environment variables:
-
+```
 FIREBASE_API_KEY=your-api-key
 FIREBASE_PROJECT_ID=your-project-id
 FIREBASE_APP_ID=your-app-id
+```
